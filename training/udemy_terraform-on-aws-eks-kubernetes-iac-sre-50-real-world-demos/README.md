@@ -1,0 +1,1 @@
+It will show what I have learned doing this 'udemy_terraform-on-aws-eks-kubernetes-iac-sre-50-real-world-demos' training
