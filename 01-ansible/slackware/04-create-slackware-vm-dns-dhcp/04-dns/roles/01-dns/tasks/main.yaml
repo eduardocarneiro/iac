@@ -1,0 +1,72 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+# package for nslookup
+- name: Install libedit package
+  slackpkg:
+    name: libedit
+    state: present
+
+# package for bind    
+- name: Install LMDB package
+  slackpkg:
+    name: lmdb
+    state: present
+
+- name: Install Libxml2 package
+  slackpkg:
+    name: libxml2
+    state: present
+
+- name: Install libuv package
+  slackpkg:
+    name: libuv
+    state: present
+
+- name: Install bind package
+  slackpkg:
+    name: bind
+    state: present
+
+- name: Copy the named.conf file to '{{ vm_name }}'
+  template:
+    src: named.conf.j2
+    dest: /etc/named.conf
+    mode: '0644'
+
+- name: Copy the rndc.conf file to '{{ vm_name }}'
+  template:
+    src: rndc.conf.j2
+    dest: /etc/rndc.conf
+    mode: '0644'    
+
+- name: Create the DNS zone directory
+  ansible.builtin.file:
+    path: /var/named/zones
+    state: directory
+    mode: '0755'
+    recurse: yes
+    owner: named
+    group: named
+
+- name: Copy the '{{ vm_dns_search }}' zone to '{{ vm_name }}'
+  template:
+    src: zone-sample.zone.j2
+    dest: /var/named/zones/{{ vm_dns_search }}.zone
+    mode: '0644'
+
+- name: Copy the '{{ vm_dns_search }}' zone reverse to '{{ vm_name }}'
+  template:
+    src: zone-sample.rev.j2
+    dest: /var/named/zones/{{ vm_dns_search }}.rev
+    mode: '0644'
+
+- name: Give execute permission for rc.bind service
+  shell: |
+    chmod +x /etc/rc.d/rc.bind
+
+

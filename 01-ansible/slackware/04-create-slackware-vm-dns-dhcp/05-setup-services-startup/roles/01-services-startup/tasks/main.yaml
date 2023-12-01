@@ -1,0 +1,13 @@
+---
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+- name: Copy the rc.M file to '{{ vm_name }}'
+  template:
+    src: rc.m.j2
+    dest: /etc/rc.d/rc.M
+    mode: '0755'
+
+- name: Restart the '{{ vm_name }}'
+  shell: |
+    reboot

@@ -1,0 +1,19 @@
+$TTL	86400
+$ORIGIN {{ vm_dns_search }}.
+@			1D IN SOA	@ root (
+					    {{ dns_zone_serial }}		; serial
+					    3H		; refresh
+					    15M		; retry
+					    1W		; expiry
+					    1D )	; minimum
+
+			1D IN NS	@
+			1D IN A		{{ vm_ip1 }}
+
+; entry of servers
+;auth			1D IN A		192.168.x.9
+;bastion		1D IN A		192.168.x.10
+;httpd			1D IN A		192.168.x.13
+;api.ocp4		1D IN A		192.168.x.100
+;*.apps.ocp4	1D IN A		192.168.x.200
+;*.dmz.ocp4		1D IN A		192.168.x.210

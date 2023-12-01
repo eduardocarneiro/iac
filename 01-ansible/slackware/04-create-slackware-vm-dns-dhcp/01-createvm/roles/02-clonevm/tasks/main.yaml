@@ -1,0 +1,72 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+ 
+- name: Create a VM from a template
+  vmware_guest:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    cluster: "Cluster_LAB"
+    resource_pool: '{{ vc_resource_pool }}'
+    folder: '{{ vc_folder }}'
+    template: '{{ vc_template }}'
+    name: '{{ vm_name }}'
+    state: poweredon
+    wait_for_ip_address: yes
+    wait_for_ip_address_timeout: 600 
+  delegate_to: localhost
+  register: vm_info
+  retries: 10
+  delay: 5
+#- debug: msg='{{ vm_info }}'
+#- debug: msg='{{ vm_info.instance.ipv4 }}'
+
+#- name: Add second disk to VM '{{ vm_name }}'
+#  vmware_guest_disk:
+#    hostname: '{{ vc_hostname }}'
+#    username: '{{ vc_username }}'
+#    password: '{{ vc_password }}'
+#    validate_certs: False
+#    datacenter: "LAB"
+#    name: '{{ vm_name }}'
+#    disk:
+#      - size_mb: 15360
+#        type: thin
+#        datastore: '{{ vc_datastore }}'
+#        state: present
+#        scsi_controller: 1
+#        unit_number: 0
+#        scsi_type: 'lsilogicsas'
+#        disk_mode: 'persistent'
+#  delegate_to: localhost
+#  register: disk_facts
+
+- name: Connect network to vSwitch
+  shell: |
+    export GOVC_URL='{{ vc_hostname }}'
+    export GOVC_USERNAME='{{ vc_username }}'
+    export GOVC_PASSWORD='{{ vc_password }}'
+    export GOVC_INSECURE=true
+    govc device.connect -vm '{{ vm_name }}' ethernet-0
+
+- name: Starting VM '{{ vm_name }}'
+  vmware_guest:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    name: '{{ vm_name }}'
+    state: poweredon
+    wait_for_ip_address: yes
+    wait_for_ip_address_timeout: 600 
+  delegate_to: localhost
+  retries: 10
+  delay: 5
+  register: vm_info

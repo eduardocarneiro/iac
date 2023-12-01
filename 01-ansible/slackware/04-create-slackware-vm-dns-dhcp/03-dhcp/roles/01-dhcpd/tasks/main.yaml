@@ -1,0 +1,26 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+# package for bind    
+- name: Install DHCP package
+  slackpkg:
+    name: dhcp
+    state: present
+
+- name: Set up dhcpd.conf to VM '{{ vm_name }}'
+  template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcpd.conf
+    mode: '0644'
+  register: result_copy_dhcpd_conf
+
+- name: Set up the rc.dhcpd service to VM '{{ vm_name }}'
+  template:
+    src: rc.dhcpd.j2
+    dest: /etc/rc.d/rc.dhcpd
+    mode: '0755'
+  register: result_copy_rcdhcpd_conf

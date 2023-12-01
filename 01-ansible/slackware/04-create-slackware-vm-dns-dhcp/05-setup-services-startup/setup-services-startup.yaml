@@ -1,0 +1,16 @@
+---
+#- name: Create dynamic hosts
+#  hosts: localhost
+#  tasks:
+#    - name: Dynamic ip for VM
+#      add_host:
+#        hostname: '{{ ext_vm_ip1 }}'
+#        groups:
+#        - target 
+        
+- name: Set up the GW/FW/Router services
+  # hosts: "{{ lookup('env','HOSTS') }}"
+  #hosts: target
+  hosts: '{{ ext_vm_ip1 }}' 
+  roles:
+    - 01-services-startup

@@ -1,0 +1,17 @@
+$TTL	86400
+@       IN      SOA     {{ vm_dns_search }}. root.{{ vm_dns_search }}.  (
+                                      {{ dns_zone_serial }}    ; Serial
+                                      3H	    ; Refresh
+                                      15M           ; Retry
+                                      1W            ; Expire
+                                      1D )          ; Minimum
+        IN      NS      {{ vm_dns_search }}.
+
+11	IN      PTR     {{ vm_dns_search }}.
+11	IN      PTR     {{ vm_name }}.
+
+;; entry server
+;9      IN	PTR	auth.{{ vm_dns_search }}.
+;10	    IN	PTR	bastion.{{ vm_dns_search }}.
+;13	    IN	PTR	httpd.{{ vm_dns_search }}.
+;100    IN	PTR	api.ocp4.{{ vm_dns_search }}.

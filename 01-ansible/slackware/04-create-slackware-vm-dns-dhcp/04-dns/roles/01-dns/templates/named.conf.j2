@@ -1,0 +1,78 @@
+# Use with the following in named.conf, adjusting the allow list as needed:
+key "rndc-key" {
+	algorithm hmac-sha256;
+ 	secret "ssuZT2tvPXfpvvsxisbtD6NJxI3uqlzOeeLGFQN50zs=";
+};
+# 
+controls {
+ 	inet 127.0.0.1 port 953
+	allow { 127.0.0.1; } keys { "rndc-key"; };
+};
+# End of named.conf
+
+options {
+        // Working directory
+	directory "/var/named";
+	// Query allow - (default)
+	allow-query { any; };
+        // recursive service
+	recursion yes;   
+	allow-recursion { any; };
+	// enable dnssec
+        dnssec-enable no;
+	dnssec-validation no;
+	// forwarders
+	// forwarders { 192.168.0.11; };
+	// disable notfy
+	notify no;
+	
+	/*
+	 * If there is a firewall between you and nameservers you want
+	 * to talk to, you might need to uncomment the query-source
+	 * directive below.  Previous versions of BIND always asked
+	 * questions using port 53, but BIND 8.1 uses an unprivileged
+	 * port by default.
+	 */
+	// query-source address * port 53;
+};
+
+// 
+// a caching only nameserver config
+// 
+zone "." IN {
+	type hint;
+	file "caching-example/named.root";
+};
+
+zone "localhost" IN {
+	type master;
+	file "caching-example/localhost.zone";
+	allow-update { none; };
+};
+
+zone "0.0.127.in-addr.arpa" IN {
+	type master;
+	file "caching-example/named.local";
+	allow-update { none; };
+};
+
+// lab.local
+
+zone "lab.local" {
+  type forward;
+  forwarders { 192.168.0.11; };
+};
+
+// {{ vm_dns_search }} zone
+
+zone "{{ vm_dns_search }}" IN {
+	type master;
+	file "zones/{{ vm_dns_search }}.zone";
+	allow-update { none; };
+};
+
+zone "{{ dns_reverse_arpa }}.in-addr.arpa" IN {
+	type master;
+	file "zones/{{ vm_dns_search }}.rev";
+	allow-update { none; };
+};

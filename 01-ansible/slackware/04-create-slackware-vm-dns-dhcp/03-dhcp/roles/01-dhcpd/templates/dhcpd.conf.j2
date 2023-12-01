@@ -1,0 +1,33 @@
+# dhcpd.conf
+#
+# DHCPD configuration.
+subnet {{ dhcp_subnet }} netmask 255.255.255.0 {
+  authoritative;
+  range {{ dhcp_range_start }} {{ dhcp_range_end }};
+  option domain-name-servers {{ vm_dns1 }}, 192.168.0.11, 8.8.8.8;
+  option domain-name "{{ vm_dns_search }}";
+  option domain-search "{{ vm_dns_search }}", "lab.local";
+  option routers {{ vm_gw }};
+  option broadcast-address {{ dhcp_broadcast_ip }};
+  default-lease-time 600;
+  max-lease-time 7200;
+#  ignore-client-uids true; #https://access.redhat.com/solutions/5704151
+}
+
+# master0
+#host master0 {
+#  hardware ethernet 00:50:56:91:2b:8f;
+#  fixed-address 192.168.31.22;
+#}
+
+# master1
+#host master1 {
+#  hardware ethernet 00:50:56:91:b9:8d;
+#  fixed-address 192.168.31.20;
+#}
+
+# master2
+#host master2 {
+#  hardware ethernet 00:50:56:91:3c:43;
+#  fixed-address 192.168.31.21;
+#}

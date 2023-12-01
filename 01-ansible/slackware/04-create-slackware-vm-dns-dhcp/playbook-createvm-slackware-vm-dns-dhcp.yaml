@@ -1,0 +1,15 @@
+---
+- name: Playbook create VM
+  import_playbook: ./01-createvm/createvm.yaml
+
+- name: Playbook Add the local Slackware repository
+  import_playbook: ./02-add-repo-local/add-repo-local.yaml
+
+- name: Playbook create the DHCP service
+  import_playbook: ./03-dhcp/dhcp-service.yaml
+
+- name: Playbook create the DNS service
+  import_playbook: ./04-dns/dns-service.yaml
+
+- name: Playbook create services startup
+  import_playbook: ./05-setup-services-startup/setup-services-startup.yaml  
