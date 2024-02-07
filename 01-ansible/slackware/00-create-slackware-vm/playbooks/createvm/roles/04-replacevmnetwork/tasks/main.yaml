@@ -1,0 +1,16 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: replace vm network
+  shell: |
+    export GOVC_URL=vcenter.lab.local
+    export GOVC_USERNAME=administrator@vsphere.local
+    export GOVC_PASSWORD=mudarP@ssw0rd
+    export GOVC_INSECURE=true
+    govc vm.network.change -vm {{ vm_name }} -net {{ vm_network}} ethernet-0 
+  register: vm_network_replace_result
+
+- debug:
+    msg: "{{ vm_network_replace_result }}"
+  
