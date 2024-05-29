@@ -1,0 +1,9 @@
+---
+- name: Playbook create VM
+  import_playbook: ./01-createvm/createvm.yaml
+
+- name: Playbook Add the local Slackware repository
+  import_playbook: ./02-add-repo-local/add-repo-local.yaml
+
+- name: Playbook create the NFS service
+  import_playbook: ./03-nfs/nfs-service.yaml

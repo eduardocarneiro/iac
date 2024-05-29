@@ -1,0 +1,29 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+- name: Set Local slackpkg Mirrors to '{{ vm_name }}'
+  template:
+    src: mirrors.j2
+    dest: /etc/slackpkg/mirrors
+    mode: '0644'
+  register: result_copy_httpd_conf
+
+- name: Set slackpkg CHECKGPG to off
+  lineinfile:
+    path: /etc/slackpkg/slackpkg.conf
+    regexp: '^CHECKGPG=on'
+    line: CHECKGPG=off
+
+- name: Set slackpkg CHECKMD5 to off
+  lineinfile:
+    path: /etc/slackpkg/slackpkg.conf
+    regexp: '^CHECKMD5=on'
+    line: CHECKMD5=off
+
+- name: Update slackpkg indexes
+  shell: |
+    slackpkg update

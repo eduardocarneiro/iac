@@ -1,0 +1,61 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+- name: Create a nfsnobody group
+  user:
+    name: nfsnobody
+    state: present
+
+- name: Create a nfsnobody user
+  user:
+    name: nfsnobody
+    group: nfsnobody
+    shell: /usr/sbin/nologin
+
+- name: Create the NFS directory
+  file:
+    path: /nfs
+    state: directory
+    owner: nfsnobody
+    group: nfsnobody
+    mode: '0777'
+
+- name: Create a partition with the second disk
+  shell: |
+    printf 'o\nn\np\n1\n\n\nw' | fdisk /dev/sdb
+    mkfs.ext4 /dev/sdb1
+    echo "/dev/sdb1           /nfs         ext4        defaults         0   0" >> /etc/fstab
+    mount -a 
+
+- name: Install Libtirpc package
+  slackpkg:
+    name: libtirpc
+    state: present
+
+- name: Add execution permission to rc.nfsd and rc.rpc services
+  file: 
+    path: '{{ item }}'
+    mode: '0755'
+  loop:
+    - /etc/rc.d/rc.nfsd
+    - /etc/rc.d/rc.rpc 
+
+- name: Set up NFS share to VM '{{ vm_name }}'
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    mode: '0644'
+
+- name: Copy the rc.M file to '{{ vm_name }}'
+  template:
+    src: rc.m.j2
+    dest: /etc/rc.d/rc.M
+    mode: '0755'
+
+- name: Reboot VM '{{ vm_name }}'
+  shell: |
+    reboot

@@ -1,0 +1,60 @@
+---
+#- name: Include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Include vars
+  include_vars: "../../../../vars.yaml"
+
+- name: Set the state of a virtual machine to shutdown-guest
+  vmware_guest_powerstate:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    folder: '{{ vc_folder }}'
+    name: '{{ vm_name }}'
+    state: shutdown-guest
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: vm_poweroff_info
+
+#- debug:
+#    msg: '{{ vm_poweroff_info }}'
+
+- name: change network1 to '{{ vm_network1 }}'
+  vmware_guest_network:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: 'LAB'
+    name: '{{ vm_name }}'
+    mac_address: '{{ vm_poweroff_info.instance.hw_eth0.macaddress }}'
+    network_name: '{{ vm_network1 }}'
+    state: present
+
+- name: Set the state of a virtual machine to poweron
+  vmware_guest_powerstate:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    folder: '{{ vc_folder }}'
+    name: '{{ vm_name }}'
+    state: powered-on
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: vm_poweron
+
+#- debug:
+#    msg: "{{ vm_poweron }}"
+
+- name: Wait VM '{{ vm_name }}' starts
+  wait_for:
+    host: '{{ vm_ip1 }}'
+    port: 22
+    timeout: 20
+  delegate_to: localhost
+  register: vm_checkstatus
+
+- debug: msg='VM started'

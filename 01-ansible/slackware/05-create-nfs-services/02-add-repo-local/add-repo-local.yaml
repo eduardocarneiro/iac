@@ -1,0 +1,15 @@
+---
+- name: Create dynamic hosts
+  hosts: localhost
+  tasks:
+    - name: Dynamic ip for VM
+      add_host:
+        hostname: '{{ ext_vm_ip1 }}'
+        groups:
+        - target 
+        
+- name: Set up the Local Slackware slackpkg repository
+  hosts: target
+  #hosts: '{{ ext_vm_ip1 }}'
+  roles:
+    - 01-mirror
