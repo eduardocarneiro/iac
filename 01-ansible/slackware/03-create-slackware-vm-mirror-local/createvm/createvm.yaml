@@ -1,0 +1,20 @@
+---
+#- name: Getting an IP from IPAM
+#  hosts: 192.168.0.14
+#  roles: 
+#    - 01-getip
+
+- name: Clone a VM from VMware hypervisor
+  hosts: vcenter
+  roles:
+    - 02-clonevm
+
+- name: Setting the basic node setup
+  hosts: vm
+  roles:
+    - 03-basicsetup
+
+- name: Replace VM Network 
+  hosts: vcenter
+  roles:
+    - 04-replacevmnetwork

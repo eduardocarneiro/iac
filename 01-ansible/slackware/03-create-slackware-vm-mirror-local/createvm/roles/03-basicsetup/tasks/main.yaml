@@ -1,0 +1,24 @@
+---
+- name: Include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Set VM hostname
+  template:
+    src: hostname.j2
+    dest: /etc/HOSTNAME
+    mode: '0644'
+  register: vm_hostname_result
+
+- name: Set VM DNS configuration
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: '0644'
+  register: vm_dns_result
+
+- name: Set VM IP and GW
+  template:
+    src: rc.inet1.conf.j2
+    dest: /etc/rc.d/rc.inet1.conf
+    mode: '0644'
+  register: vm_ip_and_gw_result

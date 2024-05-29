@@ -1,0 +1,62 @@
+---
+- name: Include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Mount the cd-rom on VM '{{ vm_name }}'
+  shell: |
+    mount /dev/cdrom /mnt/cdrom
+  register: result_mountcdrom
+
+- name: Install Httpd packages
+  shell: |
+    upgradepkg --install-new /mnt/cdrom/slackware64/l/apr-util-1.6.1-x86_64-10.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/ap/sqlite-3.37.2-x86_64-1.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/ap/mariadb-10.5.13-x86_64-2.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/l/apr-1.7.0-x86_64-3.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/l/icu4c-69.1-x86_64-1.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/n/httpd-2.4.52-x86_64-1.txz
+    chmod +x /etc/rc.d/rc.httpd
+    # /etc/rc.d/rc.httpd start
+  register: result_install_httpd_packages
+
+- name: Install Rsync package
+  shell: |
+    upgradepkg --install-new /mnt/cdrom/slackware64/l/lz4-1.9.3-x86_64-3.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/l/xxHash-0.8.1-x86_64-2.txz
+    upgradepkg --install-new /mnt/cdrom/slackware64/n/rsync-3.2.3-x86_64-4.txz  
+  register: result_install_rsync_packages
+
+- name: Copy the httpd.conf to '{{ vm_name }}'
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/httpd.conf
+    mode: '0644'
+  register: result_copy_httpd_conf
+
+- name: Create a partition with the second disk
+  shell: |
+    printf 'o\nn\np\n1\n\n\nw' | fdisk /dev/sdb
+    mkfs.ext4 /dev/sdb1
+    echo "/dev/sdb1           /var/www         ext4        defaults         0   0" >> /etc/fstab
+    mount -a
+
+- name: Copy the Slackware 15 ISO files to /var/wwww to create the local mirror
+  synchronize:
+    src: /mnt/cdrom/
+    dest: /var/www/
+  delegate_to: '{{ vm_ip1 }}'
+
+- name: Start HTTPD 
+  shell: |
+    /etc/rc.d/rc.httpd start
+
+- name: Umount the /mnt/cdrom 
+  shell: |
+    umount /mnt/cdrom
+
+
+#1. mount the cdrom
+#2. install httpd packages
+#3. configure httpd
+#4. copy the cdrom files to httpd directory
+#5. restart httpd

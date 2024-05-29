@@ -1,0 +1,6 @@
+---
+- name: Playbook create VM
+  import_playbook: ./createvm/createvm.yaml
+
+- name: Playbook set up local mirror
+  import_playbook: ./mirror-services/mirror-services.yaml

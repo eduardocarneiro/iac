@@ -1,0 +1,41 @@
+---
+- name: Include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Set the state of a virtual machine to shutdown-guest
+  vmware_guest_powerstate:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    folder: '{{ vc_folder }}'
+    name: '{{ vm_name }}'
+    state: shutdown-guest
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: vm_poweroff_info
+
+- name: Detach an ISO image to VM '{{ vm_name }}'
+  shell: |
+    export GOVC_URL='{{ vc_hostname }}'
+    export GOVC_USERNAME='{{ vc_username }}'
+    export GOVC_PASSWORD='{{ vc_password }}'
+    export GOVC_INSECURE=true
+    govc device.disconnect -vm '{{ vm_name }}' cdrom-3000  
+    govc device.cdrom.eject -vm '{{ vm_name }}' -device cdrom-3000 
+ 
+- name: Starting VM '{{ vm_name }}'
+  vmware_guest:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    name: '{{ vm_name }}'
+    state: poweredon
+    wait_for_ip_address: yes
+    wait_for_ip_address_timeout: 600 
+  delegate_to: localhost
+  retries: 10
+  delay: 5
+  register: vm_info
