@@ -1,0 +1,59 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: set vm hostname
+  shell: |
+    echo {{ vm_name }} > /etc/HOSTNAME
+  retries: 60
+  delay: 5
+  register: vm_hostname_result
+
+- name: set vm dns configuration
+  shell: |
+    echo "search {{ vm_dns_search }}" > /etc/resolv.conf
+    echo "nameserver {{ vm_dns1 }}" >> /etc/resolv.conf 
+  #retries: 60
+  #delay: 5
+  register: vm_dns_result
+
+- name: set vm ip address
+  replace:
+    dest: /etc/rc.d/rc.inet1.conf
+    regexp: '192.168.0.99'
+    replace: '{{ vm_ip }}'
+    backup: no
+  register: vm_ip_result
+
+- name: set vm gateway
+  replace:
+    dest: /etc/rc.d/rc.inet1.conf
+    regexp: '192.168.0.2'
+    replace: '{{ vm_gw }}'
+    backup: no
+  register: vm_gw_result
+
+- name: reboot vm
+  shell: |
+    reboot
+  register: vm_reboot_result
+
+#- name: replace vm network
+#  shell: |
+#    govc vm.network.change -vm {{ vm_name }} -net {{ vm_network }} ethernet-0 
+#  register: vm_network_replace_result
+
+- debug:
+    msg: "{{ vm_hostname_result }}"
+- debug:
+    msg: "{{ vm_dns_result }}"
+- debug:
+    msg: "{{ vm_ip_result }}"
+- debug:
+    msg: "{{ vm_gw_result }}"
+- debug:
+    msg: "{{ vm_reboot_result }}"
+#- debug:
+#    msg: "{{ vm_network_replace_result }}"
+# other way to do 'debug msg' 
+#- debug: msg="{{ vm_shutdown_result }}"

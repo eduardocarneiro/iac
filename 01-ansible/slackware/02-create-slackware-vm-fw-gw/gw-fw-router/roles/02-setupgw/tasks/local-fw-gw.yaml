@@ -1,0 +1,25 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+ 
+- name: wait for connection to {{ vm_ip1 }}
+  wait_for_connection:
+    delay: 10
+    timeout: 15
+
+- name: set the iptables rules
+  template:
+    src: rc.firewall-local.j2
+    dest: /etc/rc.d/rc.firewall
+    mode: '0755'
+  register: vm_iptables_rules
+
+- name: set the rc.M 
+  template:
+    src: rc.M.j2
+    dest: /etc/rc.d/rc.M
+    mode: '0755'
+  register: vm_rc_m
+
+- name: apply iptables rules
+  command: /sbin/reboot

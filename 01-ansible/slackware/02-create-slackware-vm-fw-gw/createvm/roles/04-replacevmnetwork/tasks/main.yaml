@@ -1,0 +1,11 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Replace and connect VM Network to the right vSwitch - VM with 1 nic 
+  include_tasks: replace-network-1nic.yaml 
+  when: vm_network2 is not defined 
+
+- name: Replace and connect VM Network to the right vSwitch - VM with 2 nics 
+  include_tasks: replace-network-2nics.yaml 
+  when: vm_network2 is defined 

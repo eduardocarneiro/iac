@@ -1,0 +1,17 @@
+---
+vc_hostname: vcenter.lab.local
+vc_username: administrator@vsphere.local
+vc_password: xxxxxxxxx
+#vc_resource_pool: ocp4.example.com
+vc_resource_pool: "{{ ext_resource_pool }}"
+#vc_folder: /LAB/vm/redhat/openshift/ocp4-example
+vc_folder: "{{ ext_vc_folder }}" 
+vc_template: template_slackware15
+vm_name: "{{ ext_vm_name }}"
+vm_network1: "{{ ext_vm_network1 }}"
+vm_network2: "{{ ext_vm_network2 }}"
+vm_ip1: "{{ ext_vm_ip1 }}"
+vm_ip2: "{{ ext_vm_ip2 }}"
+vm_gw: "{{ ext_vm_gw }}"
+vm_dns1: "{{ ext_vm_dns1 }}"
+vm_dns_search: "{{ ext_vm_dns_search }}"

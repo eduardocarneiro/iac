@@ -1,0 +1,15 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: propagate {{ vm_network_range }} network on global FW/GW
+  shell: |
+    echo " " >> /etc/rc.d/rc.firewall
+    echo "# route to network - {{ vm_network2 }}" >> /etc/rc.d/rc.firewall
+    echo "route add -net {{ vm_network_range }}/24 gw {{ vm_ip1 }}" >> /etc/rc.d/rc.firewall
+    /etc/rc.d/rc.firewall 
+  when: not global_fw_gw | bool
+  register: result_allownet
+
+- debug: msg='{{ result_allownet }}'
+

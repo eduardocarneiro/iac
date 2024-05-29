@@ -1,0 +1,11 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: Basic setup to VM with 1 nic 
+  include_tasks: basicsetup-1nic.yaml 
+  when: vm_network2 is not defined 
+
+- name: Basic setup to VM with 2 nic 
+  include_tasks: basicsetup-2nics.yaml 
+  when: vm_network2 is defined  

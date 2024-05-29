@@ -1,0 +1,25 @@
+#!/bin/bash 
+
+# enable ip_forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# flush iptables rules
+iptables -F
+iptables -X
+
+iptables -F -t nat
+iptables -X -t nat
+
+# enable masquerade
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# add vpn redirect
+# iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 7777 -j DNAT --to 192.168.0.30:1194
+
+# adding routes
+
+# route to network - EX180
+# route add -net 192.168.30.0/24 gw 7.7.7.10
+
+# route to network - OCP4-EXAMPLE
+# route add -net 192.168.31.0/24 gw 7.7.7.11

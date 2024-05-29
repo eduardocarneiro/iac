@@ -1,0 +1,8 @@
+[vcenter]
+localhost
+
+[vm]
+192.168.0.99
+
+[globalgw]
+192.168.0.2

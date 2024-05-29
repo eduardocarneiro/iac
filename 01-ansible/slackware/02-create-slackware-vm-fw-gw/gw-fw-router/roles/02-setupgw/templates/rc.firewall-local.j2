@@ -1,0 +1,14 @@
+#!/bin/bash 
+
+# enable ip_forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# flush iptables rules
+iptables -F
+iptables -X
+
+iptables -F -t nat
+iptables -X -t nat
+
+# enable masquerade
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE

@@ -1,0 +1,73 @@
+---
+- name: Set the state of a virtual machine to shutdown-guest
+  vmware_guest_powerstate:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    folder: '{{ vc_folder }}'
+    name: '{{ vm_name }}'
+    state: shutdown-guest
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: vm_poweroff_info
+
+#- debug:
+#    msg: '{{ vm_poweroff_info }}'
+
+- name: change network1 to '{{ vm_network1 }}' vSwitch
+  vmware_guest_network:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: 'LAB'
+    name: '{{ vm_name }}'
+    mac_address: '{{ vm_poweroff_info.instance.hw_eth0.macaddress }}'
+    network_name: '{{ vm_network1 }}'
+    state: present
+
+- name: add network2 to '{{ vm_network2 }}' vSwitch
+  vmware_guest_network:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    name: '{{ vm_name }}'
+    state: present
+    network_name: '{{ vm_network2 }}'
+    connected: true
+
+#- name: change, connect vm network and poweron the vm
+#  shell: |
+#    export GOVC_URL='{{ vc_hostname }}'
+#    export GOVC_USERNAME='{{ vc_username }}'
+#    export GOVC_PASSWORD='{{ vc_password }}'
+#    export GOVC_INSECURE=true
+#    govc vm.network.change -vm '{{ vm_name }}' -net '{{ vm_network1 }}' ethernet-0
+#    govc device.connect -vm '{{ vm_name }}' ethernet-0
+#    govc vm.network.add -vm '{{ vm_name }}' -net '{{ vm_network2 }}' -net.adapter vmxnet3
+#    sleep 10
+#    govc vm.power -on '{{ vm_name }}'
+#  register: vm_network_replace_result
+
+# debug:
+#    msg: "{{ vm_network_replace_result }}"
+#- debug: msg="{{ vm_network_replace_result }}"
+
+- name: Set the state of a virtual machine to poweron
+  vmware_guest_powerstate:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    folder: '{{ vc_folder }}'
+    name: '{{ vm_name }}'
+    state: powered-on
+    state_change_timeout: 200
+  delegate_to: localhost
+  register: vm_poweron
+
+#- debug:
+#    msg: "{{ vm_poweron }}"

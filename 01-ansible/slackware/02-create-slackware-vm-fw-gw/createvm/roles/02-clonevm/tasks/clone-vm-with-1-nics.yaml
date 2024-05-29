@@ -1,0 +1,53 @@
+---
+- name: Create a VM from a template
+  vmware_guest:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    cluster: "Cluster_LAB"
+    resource_pool: '{{ vc_resource_pool }}'
+    folder: '{{ vc_folder }}'
+    template: '{{ vc_template }}'
+    name: '{{ vm_name }}'
+    networks:
+      - name: '{{ vm_network1 }}'
+    state: poweredoff
+##    wait_for_ip_address: yes
+##    wait_for_ip_address_timeout: 600 
+  delegate_to: localhost
+  register: vm_info
+#  until: vm_info.instance.hw_power_status == 'poweredOn'
+#  until: vm_info.hw_power_status == 'poweredOn'
+##  retries: 10
+##  delay: 5
+#- debug: msg='{{ vm_info }}'
+#- debug: msg='{{ vm_info.instance.ipv4 }}'
+
+- name: Connect network to vSwitch
+  shell: |
+    export GOVC_URL='{{ vc_hostname }}'
+    export GOVC_USERNAME='{{ vc_username }}'
+    export GOVC_PASSWORD='{{ vc_password }}'
+    export GOVC_INSECURE=true
+    govc device.connect -vm '{{ vm_name }}' ethernet-0
+  #register: deploy_vm
+
+- name: Starting VM '{{ vm_name }}'
+  vmware_guest:
+    hostname: '{{ vc_hostname }}'
+    username: '{{ vc_username }}'
+    password: '{{ vc_password }}'
+    validate_certs: False
+    datacenter: "LAB"
+    name: '{{ vm_name }}'
+    state: poweredon
+    wait_for_ip_address: yes
+    wait_for_ip_address_timeout: 600 
+  delegate_to: localhost
+  retries: 10
+  delay: 5
+  register: vm_info
+
+#govc vm.network.change -vm '{{ vm_name }}' -net '{{ vm_network1 }}' ethernet-0

@@ -1,0 +1,20 @@
+---
+#- name: include vars
+#  include_vars: "{{ playbook_dir }}/vars.yaml"
+ 
+- name: set the iptables rules
+  template:
+    src: rc.firewall-global.j2
+    dest: /etc/rc.d/rc.firewall
+    mode: '0755'
+  register: vm_iptables_rules
+
+- name: set the rc.M 
+  template:
+    src: rc.M.j2
+    dest: /etc/rc.d/rc.M
+    mode: '0755'
+  register: vm_rc_m
+
+- name: apply iptables rules
+  command: /sbin/reboot

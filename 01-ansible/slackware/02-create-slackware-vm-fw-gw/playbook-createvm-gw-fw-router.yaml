@@ -1,0 +1,6 @@
+---
+- name: Playbook create VM
+  import_playbook: ./createvm/createvm.yaml
+
+- name: Playbook set up FW/GW
+  import_playbook: ./gw-fw-router/gw-fw-router.yaml

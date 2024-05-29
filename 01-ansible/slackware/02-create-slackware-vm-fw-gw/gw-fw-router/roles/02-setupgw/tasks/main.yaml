@@ -1,0 +1,38 @@
+---
+- name: include vars
+  include_vars: "{{ playbook_dir }}/vars.yaml"
+
+- name: create global FW/GW 
+  include_tasks: global-fw-gw.yaml 
+  when: global_fw_gw | bool
+
+- name: create local FW/GW 
+  include_tasks: local-fw-gw.yaml 
+  when: not global_fw_gw | bool
+
+  ###
+#- name: set the iptables rules
+#  template:
+#    src: rc.firewall-global.j2
+#    dest: /etc/rc.d/rc.firewall
+#    mode: '0755'
+#  when: global-fw-gw | bool 
+#  register: vm_iptables_rules
+#
+#- name: set the iptables rules
+#  template:
+#    src: rc.firewall-local.j2
+#    dest: /etc/rc.d/rc.firewall
+#    mode: '0755'
+#  when: not global-fw-gw
+#  register: vm_iptables_rules
+#
+#- name: set the rc.M 
+#  template:
+#    src: rc.M.j2
+#    dest: /etc/rc.d/rc.M
+#    mode: '0755'
+#  register: vm_rc_m
+#
+#- name: apply iptables rules
+#  command: /sbin/reboot

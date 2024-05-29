@@ -1,0 +1,37 @@
+---
+- name: Propagate route
+  hosts: globalgw
+  roles:
+    - 01-allownet
+    #- role: roles/02-allownet
+    #  #- 02-allownet
+    #  when: not global_fw_gw | bool
+    
+- name: Create dynamic hosts
+  hosts: localhost
+  tasks:
+    - name: dynamic ip for global FW/GW
+      add_host:
+        hostname: '{{ ext_vm_ip1 }}'
+        groups:
+        - target 
+      when: ext_global_fw_gw | bool
+
+    - name: dynamic ip for local FW/GW
+      add_host:
+        hostname: '{{ ext_vm_ip2 }}'
+        groups:
+        - target 
+      when: not ext_global_fw_gw | bool
+
+- name: Set up the GW/FW/Router services
+  # hosts: "{{ lookup('env','HOSTS') }}"
+  hosts: target 
+  roles:
+    - 02-setupgw
+
+# reference
+# https://github.com/ansible/ansible/issues/46339
+# add_host module
+# https://docs.catalystcloud.nz/tutorials/compute/ansible-create-x-servers-using-in-memory-inventory.html
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/add_host_module.html
