@@ -20,7 +20,7 @@ resource "aws_route_table" "private" {
 
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = format("%s-%s", var.project_name, var.private_subnets[count.index].name)
+    Name = format("%s-%s", var.rtb_name, var.private_subnets[count.index].name)
   }
 }
 

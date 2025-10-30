@@ -14,6 +14,11 @@ variable "ngw_name" {
   type = string
 }
 
+variable "rtb_name" {
+  type = string
+}
+
+
 variable "region" {
   type = string
 }
