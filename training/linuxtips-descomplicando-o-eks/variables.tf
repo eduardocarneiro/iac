@@ -10,6 +10,10 @@ variable "eip_name" {
   type = string
 }
 
+variable "ngw_name" {
+  type = string
+}
+
 variable "region" {
   type = string
 }

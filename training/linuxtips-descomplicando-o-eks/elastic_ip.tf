@@ -3,6 +3,6 @@ resource "aws_eip" "eip" {
 
   domain = "vpc"
   tags = {
-    Name = format("%s-$s", var.eip_name, var.public_subnets[count.index].availability_zone)
+    Name = format("%s-%s", var.eip_name, var.public_subnets[count.index].availability_zone)
   }
 }
