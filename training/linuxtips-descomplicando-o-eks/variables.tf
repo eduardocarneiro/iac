@@ -6,6 +6,10 @@ variable "igw_name" {
   type = string
 }
 
+variable "eip_name" {
+  type = string
+}
+
 variable "region" {
   type = string
 }

@@ -4,3 +4,4 @@ resource "aws_internet_gateway" "main" {
     Name = var.igw_name
   }
 }
+
