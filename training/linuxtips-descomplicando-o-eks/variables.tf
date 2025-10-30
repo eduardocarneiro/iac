@@ -20,7 +20,7 @@ variable "vpc_additional_cidrs" {
   description = "Additional VPC"
 }
 
-/*
+
 variable "public_subnets" {
   description = "List of Public subnets"
   type = list(object({
@@ -29,4 +29,3 @@ variable "public_subnets" {
     availability_zone = string
   }))
 }
-*/
