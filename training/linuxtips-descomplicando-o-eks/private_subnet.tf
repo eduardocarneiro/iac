@@ -18,7 +18,7 @@ resource "aws_subnet" "private" {
 resource "aws_route_table" "private" {
   count = length(var.private_subnets)
 
-  vpc_id = aws.vpc.main.id
+  vpc_id = aws_vpc.main.id
   tags = {
     Name = format("%s-%s", var.project_name, var.private_subnets[count.index].name)
   }
@@ -29,7 +29,7 @@ resource "aws_route" "private" {
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
 
-  gateway_id = aws_internet_gateway.main[
+  gateway_id = aws_nat_gateway.main[
     index(
       var.public_subnets[*].availability_zone,
       var.private_subnets[count.index].availability_zone
