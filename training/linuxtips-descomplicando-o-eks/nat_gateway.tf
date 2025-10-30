@@ -4,7 +4,7 @@ resource "aws_nat_gateway" "main" {
   allocation_id = aws_eip.eip[count.index].id
 
   subnet_id = aws_subnet.public[count.index].id
-tags = {
-    Name = format("%s-%s", var.ngw_name, var.public_subnets[count.index].availability_zone )
-}
+  tags = {
+    Name = format("%s-%s", var.ngw_name, var.public_subnets[count.index].availability_zone)
+  }
 }
