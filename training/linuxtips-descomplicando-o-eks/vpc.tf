@@ -4,8 +4,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name = var.project_name
-  }
+    Name = var.vpc_name
 }
 
 // doc aws CIDR blocks
