@@ -6,6 +6,7 @@ resource "aws_vpc" "main" {
   tags = {
     Name = var.vpc_name
 }
+}
 
 // doc aws CIDR blocks
 // https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html
