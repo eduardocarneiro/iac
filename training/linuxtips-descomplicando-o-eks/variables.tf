@@ -53,4 +53,12 @@ variable "private_subnets" {
   }))
 }
 
+variable "database_subnets" {
+  description = "List of Private subnets"
+  type = list(object({
+    name              = string
+    cidr              = string
+    availability_zone = string
+  }))
+}
 
