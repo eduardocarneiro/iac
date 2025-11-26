@@ -52,3 +52,5 @@ variable "private_subnets" {
     availability_zone = string
   }))
 }
+
+
