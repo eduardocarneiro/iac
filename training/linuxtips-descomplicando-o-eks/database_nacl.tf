@@ -27,4 +27,17 @@ resource "aws_network_acl_rule" "deny" {
 
 }
 
+resource "aws_network_acl_rule" "allow_3306" {
 
+  count = length(var.private_subnets)
+
+  network_acl_id = aws_network_acl.database.id
+  rule_action    = "allow"
+  rule_number    = 10 + count.index
+
+  protocol   = "tcp"
+  cidr_block = aws_subnet.private[count.index].cidr_block
+  from_port  = 3306
+  to_port    = 3306
+
+}
