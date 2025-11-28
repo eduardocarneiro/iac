@@ -18,6 +18,9 @@ variable "rtb_name" {
   type = string
 }
 
+variable "nacl_name" {
+  type = string
+}
 
 variable "region" {
   type = string
