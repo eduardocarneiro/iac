@@ -56,3 +56,12 @@ resource "aws_network_acl_rule" "allow_6379" {
   to_port    = 6379
 
 }
+
+resource "aws_network_acl_association" "database" {
+
+  count = length(var.database_subnets)
+
+  network_acl_id = aws_network_acl.database.id
+  subnet_id      = aws_subnet.database[count.index].id
+
+}
