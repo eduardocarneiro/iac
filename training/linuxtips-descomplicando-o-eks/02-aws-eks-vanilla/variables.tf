@@ -21,3 +21,7 @@ variable "ssm_private_subnets" {
 variable "ssm_pod_subnets" {
   type = list(string)
 }
+
+variable "kms_name" {
+  type = string
+}
