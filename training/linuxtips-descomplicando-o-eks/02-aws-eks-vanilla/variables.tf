@@ -25,3 +25,7 @@ variable "ssm_pod_subnets" {
 variable "kms_name" {
   type = string
 }
+
+variable "k8s_version" {
+  type = string
+}
