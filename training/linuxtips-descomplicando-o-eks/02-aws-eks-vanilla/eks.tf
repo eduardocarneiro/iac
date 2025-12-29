@@ -28,4 +28,7 @@ resource "aws_eks_cluster" "main" {
     "kubernetes.iocluster/${var.eks_name}" = "shared"
   }
 
+  zonal_shift_config {
+    enabled = true
+  }
 }
