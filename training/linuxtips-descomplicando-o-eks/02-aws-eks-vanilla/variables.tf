@@ -42,3 +42,17 @@ variable "nodes_instance_sizes" {
   type = list(string)
 }
 
+variable "addon_cni_version" {
+  type    = string
+  default = "v1.20.4-eksbuild.2"
+}
+
+variable "addon_coredns_version" {
+  type    = string
+  default = "v1.11.3-eksbuild.1"
+}
+
+variable "addon_kubeproxy_version" {
+  type    = string
+  default = "v1.31.10-eksbuild.12"
+}
