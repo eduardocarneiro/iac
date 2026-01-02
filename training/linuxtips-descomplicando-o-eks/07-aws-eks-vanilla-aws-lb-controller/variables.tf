@@ -56,3 +56,11 @@ variable "addon_kubeproxy_version" {
   type    = string
   default = "v1.31.10-eksbuild.12"
 }
+
+variable "aws_lb_controller_name" {
+  type = string
+}
+
+variable "aws_lb_policy_name" {
+  type = string
+}
