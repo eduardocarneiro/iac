@@ -5,23 +5,23 @@ resource "helm_release" "kube_state_metrics" {
   namespace        = "metrics-server"
   create_namespace = true
 
-  set = [ {
-    name = "apiService.create"
+  set = [{
+    name  = "apiService.create"
     value = "true"
-  },
-  {
-    name = "metricLabelsAllowlist[0]"
-    value = "nodes=[*]"
-  },
-  {
-    name  = "metricLabelsAllowlist[0]"
-    value = "nodes=[*]"
-  },
-  {
-    name  = "metricAnnotationsAllowList[0]"
-    value = "nodes=[*]"
-  }
-   ]
+    },
+    {
+      name  = "metricLabelsAllowlist[0]"
+      value = "nodes=[*]"
+    },
+    {
+      name  = "metricLabelsAllowlist[0]"
+      value = "nodes=[*]"
+    },
+    {
+      name  = "metricAnnotationsAllowList[0]"
+      value = "nodes=[*]"
+    }
+  ]
 
   depends_on = [
     aws_eks_cluster.main,

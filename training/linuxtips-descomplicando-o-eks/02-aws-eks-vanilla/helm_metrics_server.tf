@@ -9,10 +9,10 @@ resource "helm_release" "metrics_server" {
 
   version = "3.13.0"
 
-  set = [ {
-    name = "apiService.create"
+  set = [{
+    name  = "apiService.create"
     value = "true"
-  } ]
+  }]
 
   depends_on = [
     aws_eks_cluster.main,
