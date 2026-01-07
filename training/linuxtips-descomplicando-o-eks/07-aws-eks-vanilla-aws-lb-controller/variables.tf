@@ -64,3 +64,12 @@ variable "aws_lb_controller_name" {
 variable "aws_lb_policy_name" {
   type = string
 }
+
+variable "nlb_name" {
+  type = string
+}
+
+variable "nlb_target_group_name" {
+  type = string
+}
+
