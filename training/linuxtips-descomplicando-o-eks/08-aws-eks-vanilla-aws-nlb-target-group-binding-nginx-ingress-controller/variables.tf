@@ -73,3 +73,26 @@ variable "nlb_target_group_name" {
   type = string
 }
 
+variable "nginx_min_replicas" {
+  type = string
+}
+
+variable "nginx_max_replicas" {
+  type = string
+}
+
+variable "nginx_requets_cpu" {
+  type = string
+}
+
+variable "nginx_request_memonry" {
+  type = string
+}
+
+variable "nginx_limits_cpu" {
+  type = string
+}
+
+variable "nginx_limits_memory" {
+  type = string
+}

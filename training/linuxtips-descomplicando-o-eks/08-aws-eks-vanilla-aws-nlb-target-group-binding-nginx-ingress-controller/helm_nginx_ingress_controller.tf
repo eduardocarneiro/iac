@@ -20,6 +20,41 @@ resource "helm_release" "nginx_controller" {
       name  = "controller.service.type"
       value = "NodePort"
     },
+    # autoscaling
+    {
+      name  = "controller.autoscaling.enabled"
+      value = "true"
+    },
+    {
+      name  = "controller.autoscaling.minReplicas"
+      value = var.nginx_min_replicas
+    },
+    {
+      name  = "controller.autoscaling.maxReplicas"
+      value = var.nginx_max_replicas
+    },
+    # capacity
+    {
+      name  = "controller.resources.requests.cpu"
+      value = var.nginx_requets_cpu
+    },
+    {
+      name  = "controller.resources.requests.memory"
+      value = var.nginx_request_memonry
+    },
+    {
+      name  = "controller.resources.limits.cpu"
+      value = var.nginx_limits_cpu
+    },
+    {
+      name  = "controller.resources.limits.memory"
+      value = var.nginx_limits_memory
+    },
+    {
+      name  = "controller.kind"
+      value = "Deployment"
+      // value = "Daemonset"
+    }
   ]
 
   depends_on = [
